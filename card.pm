@@ -1,17 +1,15 @@
 package card;
 
-sub new {
-	my ($class,$name)=@_;
-	bless {name=>$name} ;
-}
+use Moose;
 
-sub compare {
+has 'name' => (
+      is  => 'rw',
+      isa => 'Str',
+  );
+
+sub equals {
   my ($self,$other) = @_;
-  $self->{name} eq $other->{name}; 
-}
-
-sub name {
-  $_[0]->{name}
+  $self->name eq $other->name; 
 }
 
 1;

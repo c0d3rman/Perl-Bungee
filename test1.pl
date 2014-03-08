@@ -3,7 +3,7 @@ use deck;
 use player;
 
 my $deck = deck->new(
-	map {card->new($_)} ((1..9) x 5, (10) x 8, ("B") x 3)
+	cards => [map {card->new(name => $_)} ((1..9) x 5, (10) x 8, ("B") x 3)]
 );
 #create ordered deck
 print $deck->toString;
