@@ -8,6 +8,6 @@ has 'hand' => (is  => 'rw', isa => 'deck');
 
 sub join {
 	my ($self, $game) = @_;
-	$game->players->add($self)
+	$game->players->push($self)
 }
 1;
