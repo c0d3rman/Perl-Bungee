@@ -3,53 +3,42 @@ package deck;
 use Moose;
 
 has 'cards' => (
+	traits => ['Array'],
 	is => 'rw',
-	isa => 'ArrayRef',
+	isa => 'ArrayRef[card]',
 	required => 1,
 	default => sub { [] },
-	reader => 'read_cards',
-	writer => 'write_cards',
-	clearer => 'clear'
+    handles => {
+          all_cards    => 'elements',
+          add     => 'push',
+          remove_top_card  => 'pop',
+          cards_count => 'count',
+          find_card => 'first_index',
+          grep_deck => 'grep',
+          map_deck => 'map',
+          shuffle => 'shuffle'
+    }
 );
 
-sub cards {
-	my ($self, $write) = @_;
-	$write ? $self->write_cards([$write]) : @{$self->read_cards};
-}
-
-sub add {
-	my ($self,@cards)=@_;
-	push @{$self->cards},@cards;
-}
 
 sub remove {
-	my ($self,$card,$amount) = @_;
+	my ($self,$card,$amount ) = @_;
 	$amount ||= 1;
-	@{$self->cards} = grep {!$_->equals($card) || $amount-- <= 0} @{$self->cards};
+	$self->cards = [$self->grep_deck (sub {$_->name ne $card->name or $amount-- <= 0}) ];
 	 
 }
 
 sub toString {
     my ($self)=@_;
-   local $,=') (';
-	"(" . join (') (',map {$_->name} $self->cards) . ")\n"
+    local $,=') (';
+	"(" . join (') (',$self->map_deck(sub {$_->name})) . ")\n"
 }
 
-sub shuffle {
-    my ($self)=@_;
-    my @deck = $self->cards;
-    my @newdeck;
-    #splice (@{$self->cards}, 0 , scalar @{$self->cards});
-    #$self->clear();
-	push @newdeck, splice(@deck, rand() * @deck, 1) while (@deck);
-    $self->cards(@newdeck);
-    #push @{$self->cards}, splice(@deck, rand() * @deck, 1) while (@deck);
-}
 
 sub deal {
 	my ($self,@players) = @_;
 	for (1..5) {
-			$_->deck->add(pop $self->cards) for @players;
+			$_->hand->add($self->remove_top_card) for @players;
 	}
 }
 

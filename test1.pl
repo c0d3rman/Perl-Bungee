@@ -12,12 +12,12 @@ print '-'x40,$/;
 $deck->shuffle;
 print $deck->toString;
 
-my @players = map {new player ($_)} qw/Yoni Osher Chami Itzik/;
+my @players = map {new player (name => $_,hand =>deck->new)} qw/Yoni Osher Chami Itzik/;
 
 $deck->deal(@players);
 
 for (@players) {
-  print $_->deck->toString;
+  print $_->hand->toString;
   print "\n---------\n";
 }
 

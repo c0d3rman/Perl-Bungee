@@ -1,13 +1,10 @@
 package player;
+use Moose;
 
-sub new {
-	my ($class,$name);
-	bless {name=>$name,deck=>new deck()}
-}
+has 'name' => (is  => 'rw', isa => 'Str');
+has 'hand' => (is  => 'rw', isa => 'deck');
 
-sub deck {
-    $_[0]->{deck};
-}
+
 
 sub join {
 	my ($self, $game) = @_;
